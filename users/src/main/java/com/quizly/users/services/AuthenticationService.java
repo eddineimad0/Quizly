@@ -5,7 +5,6 @@ import com.quizly.users.dtos.AuthenticationRequestDto;
 import com.quizly.users.dtos.RegisterRequestDto;
 import com.quizly.users.dtos.RegisterResponseDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +17,6 @@ import java.util.regex.Pattern;
 @RequiredArgsConstructor
 public class AuthenticationService {
     private final UserService userService;
-    @Autowired
     private final PasswordEncoder passwordEncoder;
 
     public RegisterResponseDto register(RegisterRequestDto request) {
