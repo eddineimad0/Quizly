@@ -5,7 +5,7 @@ type Choice = {
 
 type Question = {
   text: string;
-  choices: [Choice];
+  choices: Choice[];
 };
 
 type QuizDuration = {
@@ -14,7 +14,7 @@ type QuizDuration = {
 };
 
 type Quiz = {
-  questions: [Question];
+  questions: Question[];
   length: number;
   duration: QuizDuration;
 };
