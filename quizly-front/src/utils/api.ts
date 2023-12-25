@@ -1,4 +1,5 @@
 import { API_BASE_URL, QUIZ_LIST_SIZE, ACCESS_TOKEN } from "../constants";
+import { UserProfile } from "../lib/user";
 
 const request = (options: RequestOptions): Promise<any> => {
   const headers = new Headers({
@@ -77,7 +78,7 @@ export function checkEmailAvailability(
   });
 }
 
-export function getCurrentUser() {
+export function getCurrentUser(): Promise<UserProfile> {
   if (!localStorage.getItem(ACCESS_TOKEN)) {
     return Promise.reject("No access token set.");
   }
@@ -88,7 +89,7 @@ export function getCurrentUser() {
   });
 }
 
-export function getUserProfile(username: string) {
+export function getUserProfile(username: string): Promise<UserProfile> {
   return request({
     url: API_BASE_URL + "/users/" + username,
     method: "GET",

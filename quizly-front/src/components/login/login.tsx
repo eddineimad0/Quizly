@@ -6,7 +6,10 @@ import { Link } from "react-router-dom";
 import { login } from "../../utils/api";
 import { ACCESS_TOKEN } from "../../constants";
 
-export default function Login() {
+export interface LoginProps {
+  handleLogin: () => void;
+}
+export default function Login(props: LoginProps) {
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
     const loginRequest: LoginRequest = {
@@ -18,7 +21,7 @@ export default function Login() {
       .then((response) => {
         localStorage.setItem(ACCESS_TOKEN, response.accessToken);
         alert("Loged In");
-        // TODO onLoginHandler
+        props.handleLogin();
       })
       .catch((error) => {
         if (error.status === 401) {

@@ -1,15 +1,16 @@
 import { Route, Navigate } from "react-router-dom";
 
-export default function PrivateRoute(
-  Component: React.FunctionComponent,
-  authenticated: boolean,
-  props: any
-) {
+export interface PrivateRouteProps {
+  Component: React.FunctionComponent;
+  authenticated: boolean;
+  children: any;
+}
+export default function PrivateRoute(props: PrivateRouteProps) {
   return (
     <Route
       element={
-        authenticated ? (
-          <Component {...props} />
+        props.authenticated ? (
+          <props.Component {...props.children} />
         ) : (
           <Navigate replace={true} to="/login" />
         )
