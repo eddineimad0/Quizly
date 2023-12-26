@@ -68,4 +68,9 @@ public class AuthenticationController {
             return ResponseEntity.ok(resp);
         }
     }
+
+    @GetMapping("/hello")
+    public ResponseEntity hello(){
+        return ResponseEntity.ok().build();
+    }
 }

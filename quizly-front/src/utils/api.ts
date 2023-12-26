@@ -2,22 +2,24 @@ import { API_BASE_URL, QUIZ_LIST_SIZE, ACCESS_TOKEN } from "../constants";
 import { UserProfile } from "../lib/user";
 
 const request = (options: RequestOptions): Promise<any> => {
-  const headers = new Headers({
-    "Content-Type": "application/json",
-  });
+  const headers: HeadersInit = [["Content-Type", "application/json"]];
 
   if (localStorage.getItem(ACCESS_TOKEN)) {
-    headers.append(
+    headers.push([
       "Authorization",
-      "Bearer " + localStorage.getItem(ACCESS_TOKEN)
-    );
+      `Bearer ${localStorage.getItem(ACCESS_TOKEN)}`,
+    ]);
   }
 
-  const defaults = { headers: headers };
-  options = Object.assign({}, defaults, options);
-  console.log(options);
+  const url: URL = new URL(options.url);
+  const cfg: RequestInit = {
+    headers: headers,
+    method: options.method,
+    body: options.body,
+  };
+  console.log(url, cfg);
 
-  return fetch(options.url, options).then((response) =>
+  return fetch(url, cfg).then((response) =>
     response.json().then((json) => {
       if (!response.ok) {
         return Promise.reject(json);

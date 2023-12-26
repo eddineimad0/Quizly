@@ -107,6 +107,7 @@ function App() {
               }
             />
             <Route path="/*" element={<NotFound />} />
+            <Route path="/quiz/create" element={<NewQuiz />} />
           </Routes>
         </div>
       </Content>

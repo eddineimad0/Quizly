@@ -255,6 +255,7 @@ export default function SignUp() {
       password: password.value,
       confirmPassword: confirmPassword.value,
     };
+    console.log(signupRequest);
 
     signup(signupRequest)
       .then((_) => {
@@ -340,8 +341,8 @@ export default function SignUp() {
           </FormItem>
           <FormItem
             label="Confirm Password"
-            validateStatus={password.validation.validateStatus}
-            help={password.validation.errorMsg}
+            validateStatus={confirmPassword.validation.validateStatus}
+            help={confirmPassword.validation.errorMsg}
           >
             <Input
               size="large"
@@ -349,7 +350,7 @@ export default function SignUp() {
               type="password"
               autoComplete="off"
               placeholder="Same as password"
-              value={password.value}
+              value={confirmPassword.value}
               onChange={(event) =>
                 handleConfirmPasswordChange(event, validateConfirmPassword)
               }
