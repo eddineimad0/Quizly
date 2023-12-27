@@ -4,27 +4,35 @@ import com.quizly.users.dtos.UserDetailsDto;
 import com.quizly.users.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/")
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
 
-    @GetMapping("/{email}")
-    public ResponseEntity<Optional<UserDetailsDto>>findUserByEmail(@PathVariable("email") String userEmail){
-        var user = userService.findByEmail(userEmail);
+    @GetMapping("/{username}")
+    public ResponseEntity<Optional<UserDetailsDto>>findByUsername(@PathVariable("username") String username){
+        var user = userService.findByUsername(username.toLowerCase());
         return user.map(
                 u->ResponseEntity.ok(Optional.of(UserDetailsDto.builder()
                 .email(u.getEmail())
                 .username(u.getUsername())
+                .joinedAt(u.getCreatedAt())
                 .build())))
-                .orElse(ResponseEntity.ok(null));
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/checkEmailAvailability")
+    public ResponseEntity<Boolean> checkEmailAvailability(@RequestParam("email") String email){
+        return ResponseEntity.ok(userService.findByEmail(email).isEmpty());
+    }
+
+    @GetMapping("/checkUsernameAvailability")
+    public ResponseEntity<Boolean> checkUsernameAvailability(@RequestParam("username") String username){
+        return ResponseEntity.ok(userService.findByUsername(username).isEmpty());
     }
 }

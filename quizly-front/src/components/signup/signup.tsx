@@ -9,7 +9,11 @@ import {
   USERNAME_MAX_LENGTH,
   USERNAME_MIN_LENGTH,
 } from "../../constants";
-import { checkEmailAvailability, signup } from "../../utils/api";
+import {
+  checkEmailAvailability,
+  checkUsernameAvailability,
+  signup,
+} from "../../utils/api";
 
 type FieldValidation = {
   validateStatus: ValidateStatus;
@@ -113,6 +117,59 @@ export default function SignUp() {
     }
   };
 
+  const validateUsernameAvailability = () => {
+    // First check for client side errors in username
+    const usernameValue = username.value;
+    const usernameValidation = validateUsername(usernameValue);
+
+    if (usernameValidation.validateStatus === "error") {
+      setUsername({
+        value: usernameValue,
+        validation: usernameValidation,
+      });
+      return;
+    }
+
+    setUsername({
+      value: usernameValue,
+      validation: {
+        validateStatus: "validating",
+        errorMsg: null,
+      },
+    });
+
+    checkUsernameAvailability(usernameValue)
+      .then((response) => {
+        if (response) {
+          setUsername({
+            value: usernameValue,
+            validation: {
+              validateStatus: "success",
+              errorMsg: null,
+            },
+          });
+        } else {
+          setUsername({
+            value: usernameValue,
+            validation: {
+              validateStatus: "error",
+              errorMsg: "This username is already taken",
+            },
+          });
+        }
+      })
+      .catch((_) => {
+        // Marking validateStatus as success, Form will be recchecked at server
+        setUsername({
+          value: usernameValue,
+          validation: {
+            validateStatus: "success",
+            errorMsg: null,
+          },
+        });
+      });
+  };
+
   const validateEmailAvailability = () => {
     // First check for client side errors in email
     const emailValue = email.value;
@@ -136,7 +193,7 @@ export default function SignUp() {
 
     checkEmailAvailability(emailValue)
       .then((response) => {
-        if (response.available) {
+        if (response) {
           setEmail({
             value: emailValue,
             validation: {
@@ -255,20 +312,26 @@ export default function SignUp() {
       password: password.value,
       confirmPassword: confirmPassword.value,
     };
-    console.log(signupRequest);
 
     signup(signupRequest)
-      .then((_) => {
-        notification.success({
-          message: "Polling App",
-          description:
-            "Thank you! You're successfully registered. Please Login to continue!",
-        });
-        navigate("/log-in");
+      .then((response) => {
+        if (response.isError) {
+          notification.error({
+            message: "Error",
+            description: response.errors.pop(),
+          });
+        } else {
+          notification.success({
+            message: "Success",
+            description:
+              "Thank you! You're successfully registered. Please Login to continue!",
+          });
+          navigate("/log-in");
+        }
       })
       .catch((error) => {
         notification.error({
-          message: "Polling App",
+          message: "Error",
           description:
             error.message || "Sorry! Something went wrong. Please try again!",
         });
@@ -291,6 +354,7 @@ export default function SignUp() {
         <Form onSubmitCapture={handleSubmit} className="signup-form">
           <FormItem
             label="Username"
+            hasFeedback
             validateStatus={username.validation.validateStatus}
             help={username.validation.errorMsg}
           >
@@ -300,6 +364,7 @@ export default function SignUp() {
               autoComplete="off"
               placeholder="Your username"
               value={username.value}
+              onBlur={validateUsernameAvailability}
               onChange={(event) =>
                 handleUsernameChange(event, validateUsername)
               }
@@ -393,58 +458,4 @@ export default function SignUp() {
 //             errorMsg: null,
 //           };
 //     }
-// }
-
-// validateUsernameAvailability() {
-//     // First check for client side errors in username
-//     const usernameValue = this.state.username.value;
-//     const usernameValidation = this.validateUsername(usernameValue);
-
-//     if(usernameValidation.validateStatus === 'error') {
-//         this.setState({
-//             username: {
-//                 value: usernameValue,
-//                 ...usernameValidation
-//             }
-//         });
-//         return;
-//     }
-
-//     this.setState({
-//         username: {
-//             value: usernameValue,
-//             validateStatus: 'validating',
-//             errorMsg: null
-//         }
-//     });
-
-//     checkUsernameAvailability(usernameValue)
-//     .then(response => {
-//         if(response.available) {
-//             this.setState({
-//                 username: {
-//                     value: usernameValue,
-//                     validateStatus: 'success',
-//                     errorMsg: null
-//                 }
-//             });
-//         } else {
-//             this.setState({
-//                 username: {
-//                     value: usernameValue,
-//                     validateStatus: 'error',
-//                     errorMsg: 'This username is already taken'
-//                 }
-//             });
-//         }
-//     }).catch(error => {
-//         // Marking validateStatus as success, Form will be recchecked at server
-//         this.setState({
-//             username: {
-//                 value: usernameValue,
-//                 validateStatus: 'success',
-//                 errorMsg: null
-//             }
-//         });
-//     });
 // }

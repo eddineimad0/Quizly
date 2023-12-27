@@ -13,10 +13,10 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AuthenticationResponseDto {
+    @JsonProperty("accessToken")
+    private String accessToken;
     @JsonProperty("username")
     private String username;
-    @JsonProperty("email")
-    private String email;
     @JsonProperty("errors")
     private List<String> errors;
     @JsonProperty("isError")

@@ -57,25 +57,30 @@ export function createQuiz(quizData: Quiz): Promise<Response> {
 
 export function login(loginRequest: LoginRequest): Promise<LoginResponse> {
   return request({
-    url: API_BASE_URL + "/auth/sign-in",
+    url: API_BASE_URL + "/users/auth/sign-in",
     method: "POST",
     body: JSON.stringify(loginRequest),
   });
 }
 
-export function signup(signupRequest: SignupRequest) {
+export function signup(signupRequest: SignupRequest): Promise<SignupResponse> {
   return request({
-    url: API_BASE_URL + "/auth/sign-up",
+    url: API_BASE_URL + "/users/auth/sign-up",
     method: "POST",
     body: JSON.stringify(signupRequest),
   });
 }
 
-export function checkEmailAvailability(
-  email: string
-): Promise<emailAvailabilityResponse> {
+export function checkEmailAvailability(email: string): Promise<boolean> {
   return request({
     url: API_BASE_URL + "/users/checkEmailAvailability?email=" + email,
+    method: "GET",
+  });
+}
+
+export function checkUsernameAvailability(username: string): Promise<boolean> {
+  return request({
+    url: API_BASE_URL + "/users/checkUsernameAvailability?username=" + username,
     method: "GET",
   });
 }
@@ -86,7 +91,7 @@ export function getCurrentUser(): Promise<UserProfile> {
   }
 
   return request({
-    url: API_BASE_URL + "/user/me",
+    url: API_BASE_URL + "/users/me",
     method: "GET",
   });
 }

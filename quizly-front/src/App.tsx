@@ -45,14 +45,14 @@ function App() {
     setIsAuthenticated(false);
     navigate("/");
     notification.success({
-      message: "Quizly App",
+      message: "Success",
       description: "You're successfully logged out.",
     });
   };
 
   const handleLogin = () => {
     notification.success({
-      message: "Polling App",
+      message: "Success",
       description: "You're successfully logged in.",
     });
     loadCurrentUser();

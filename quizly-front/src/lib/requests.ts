@@ -20,6 +20,7 @@ type SignupRequest = {
   confirmPassword: string;
 };
 
-type emailAvailabilityResponse = {
-  available: boolean;
+type SignupResponse = {
+  errors: string[];
+  isError: boolean;
 };

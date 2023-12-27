@@ -13,9 +13,11 @@ export default function Login(props: LoginProps) {
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
     const loginRequest: LoginRequest = {
-      email: event.currentTarget.children.namedItem("email")?.textContent!,
+      email:
+        event.currentTarget.querySelector<HTMLInputElement>("#email")?.value!,
       password:
-        event.currentTarget.children.namedItem("password")?.textContent!,
+        event.currentTarget.querySelector<HTMLInputElement>("#password")
+          ?.value!,
     };
     login(loginRequest)
       .then((response) => {
@@ -48,6 +50,7 @@ export default function Login(props: LoginProps) {
             <Input
               prefix={<UserOutlined />}
               size="large"
+              id="email"
               name="email"
               placeholder="Email"
               required
@@ -58,6 +61,7 @@ export default function Login(props: LoginProps) {
               prefix={<LockOutlined />}
               size="large"
               name="password"
+              id="password"
               type="password"
               placeholder="Password"
               required

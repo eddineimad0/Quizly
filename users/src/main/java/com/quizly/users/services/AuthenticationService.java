@@ -7,6 +7,7 @@ import com.quizly.users.dtos.RegisterResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +19,7 @@ import java.util.regex.Pattern;
 public class AuthenticationService {
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
+    private final RestTemplate restTemplate;
 
     public RegisterResponseDto register(RegisterRequestDto request) {
         List<String> errors = new ArrayList<>();
@@ -43,12 +45,12 @@ public class AuthenticationService {
         request.setUsername(request.getUsername().toLowerCase());
         request.setEmail(request.getEmail().toLowerCase());
         try {
-            var user = userService.createUser(request).orElseThrow();
+            userService.createUser(request).orElseThrow();
             return RegisterResponseDto.builder()
                     .isError(false)
                     .build();
         } catch (Exception e) {
-            errors.add("An account with this email already exists.");
+            errors.add("An account with this email or username already exists.");
             return RegisterResponseDto.builder()
                     .isError(true)
                     .errors(errors)
@@ -61,11 +63,19 @@ public class AuthenticationService {
         try {
             var user = userService.findByEmail(request.getEmail())
                     .orElseThrow();
-            return AuthenticationResponseDto.builder()
-                    .isError(false)
-                    .username(user.getUsername())
-                    .email(user.getEmail())
-                    .build();
+
+            if(passwordEncoder.matches(request.getPassword(),user.getPasswordHash())){
+                // get a new jwt token from the jwt-service.
+                String jwtToken = restTemplate.getForObject("lb://jwt-service/create/" + user.getUsername(),String.class);
+                return AuthenticationResponseDto.builder()
+                        .isError(false)
+                        .username(user.getUsername())
+                        .accessToken(jwtToken)
+                        .build();
+            }else{
+                // passwords doesn't match.
+                throw new Exception();
+            }
         } catch (Exception e) {
             // Log the exception or handle it appropriately
             List<String> errors = new ArrayList<>();

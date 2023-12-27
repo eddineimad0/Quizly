@@ -7,7 +7,6 @@ import lombok.*;
 
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
 @Data
 public class RegisterRequestDto {
     @NotBlank(message = "Username must not be empty.")

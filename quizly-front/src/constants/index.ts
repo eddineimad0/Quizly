@@ -1,4 +1,4 @@
-export const API_BASE_URL = 'http://localhost:8080/api';
+export const API_BASE_URL = 'http://localhost:8010/api';
 export const ACCESS_TOKEN = 'accessToken';
 
 export const QUIZ_LIST_SIZE = 30;
