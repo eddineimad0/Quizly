@@ -18,8 +18,9 @@ public class JwtController {
         return ResponseEntity.ok(jwtService.generateToken(user));
     }
 
-    @GetMapping("/verify/{token}")
-    public ResponseEntity<String> verifyToken(@PathVariable("token") String token){
+    @GetMapping("/verify")
+    public ResponseEntity<String> verifyToken(@RequestParam("token") String token){
+        System.out.println("Token to validate="+token);
         if (jwtService.isTokenExpired(token)) {
             return ResponseEntity.notFound().build();
         }
@@ -27,7 +28,6 @@ public class JwtController {
         if(username == null) {
             return ResponseEntity.notFound().build();
         }
-
         return ResponseEntity.ok(username);
     }
 }

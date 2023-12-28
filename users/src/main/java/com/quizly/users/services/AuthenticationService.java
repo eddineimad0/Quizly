@@ -65,7 +65,7 @@ public class AuthenticationService {
                     .orElseThrow();
 
             if(passwordEncoder.matches(request.getPassword(),user.getPasswordHash())){
-                // get a new jwt token from the jwt-service.
+                // Get a new jwt token from the jwt-service.
                 String jwtToken = restTemplate.getForObject("lb://jwt-service/create/" + user.getUsername(),String.class);
                 return AuthenticationResponseDto.builder()
                         .isError(false)

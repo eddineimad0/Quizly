@@ -29,32 +29,6 @@ const request = (options: RequestOptions): Promise<any> => {
   );
 };
 
-export function getAllPolls(page: number, size: number) {
-  page = page || 0;
-  size = size || QUIZ_LIST_SIZE;
-
-  return request({
-    url: API_BASE_URL + "/polls?page=" + page + "&size=" + size,
-    method: "GET",
-  });
-}
-
-export function createQuiz(quizData: Quiz): Promise<Response> {
-  return request({
-    url: API_BASE_URL + "/quizes",
-    method: "POST",
-    body: JSON.stringify(quizData),
-  });
-}
-
-// export function castVote(voteData) {
-//     return request({
-//         url: API_BASE_URL + "/polls/" + voteData.pollId + "/votes",
-//         method: 'POST',
-//         body: JSON.stringify(voteData)
-//     });
-// }
-
 export function login(loginRequest: LoginRequest): Promise<LoginResponse> {
   return request({
     url: API_BASE_URL + "/users/auth/sign-in",
@@ -73,14 +47,18 @@ export function signup(signupRequest: SignupRequest): Promise<SignupResponse> {
 
 export function checkEmailAvailability(email: string): Promise<boolean> {
   return request({
-    url: API_BASE_URL + "/users/checkEmailAvailability?email=" + email,
+    url:
+      API_BASE_URL + "/users/validation/checkEmailAvailability?email=" + email,
     method: "GET",
   });
 }
 
 export function checkUsernameAvailability(username: string): Promise<boolean> {
   return request({
-    url: API_BASE_URL + "/users/checkUsernameAvailability?username=" + username,
+    url:
+      API_BASE_URL +
+      "/users/validation/checkUsernameAvailability?username=" +
+      username,
     method: "GET",
   });
 }
@@ -102,6 +80,36 @@ export function getUserProfile(username: string): Promise<UserProfile> {
     method: "GET",
   });
 }
+
+export function getAllPolls(page: number, size: number) {
+  page = page || 0;
+  size = size || QUIZ_LIST_SIZE;
+
+  return request({
+    url: API_BASE_URL + "/polls?page=" + page + "&size=" + size,
+    method: "GET",
+  });
+}
+
+/*
+ * TO DO.
+ */
+
+export function createQuiz(quizData: Quiz): Promise<Response> {
+  return request({
+    url: API_BASE_URL + "/quizes",
+    method: "POST",
+    body: JSON.stringify(quizData),
+  });
+}
+
+// export function castVote(voteData) {
+//   return request({
+//     url: API_BASE_URL + "/polls/" + voteData.pollId + "/votes",
+//     method: "POST",
+//     body: JSON.stringify(voteData),
+//   });
+// }
 
 export function getUserCreatedPolls(
   username: string,
