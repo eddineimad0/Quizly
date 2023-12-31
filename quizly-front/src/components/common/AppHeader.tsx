@@ -110,6 +110,18 @@ function ProfileDropdownMenu(props: ProfileDropdownMenuProps) {
       </Menu.Item>
     </Menu>
   );
+  // const dropdownMenu: MenuProps["items"] = [
+  //   {
+  //     label: <Link to={`/users/${props.currentUser.username}`}>Profile</Link>,
+  //     key: "profile",
+  //     className: "dropdown-item",
+  //   },
+  //   {
+  //     label: <span>Logout</span>,
+  //     key: "logout",
+  //     className: "dropdown-item",
+  //   },
+  // ];
 
   return (
     <Dropdown

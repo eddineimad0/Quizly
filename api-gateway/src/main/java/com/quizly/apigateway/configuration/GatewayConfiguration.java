@@ -20,6 +20,9 @@ public class GatewayConfiguration {
                 .route("users-service",predicateSpec -> predicateSpec.path("/api/users/**")
                         .filters(f -> f.filter(jwtFilter).stripPrefix(2))
                         .uri("lb://users-service"))
+                .route("quizs-service",predicateSpec -> predicateSpec.path("/api/quizs/**")
+                        .filters(f->f.filter(jwtFilter).stripPrefix(2))
+                        .uri("lb://quizs-service"))
                 .build();
 
     }

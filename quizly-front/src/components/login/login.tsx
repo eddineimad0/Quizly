@@ -22,7 +22,6 @@ export default function Login(props: LoginProps) {
     login(loginRequest)
       .then((response) => {
         localStorage.setItem(ACCESS_TOKEN, response.accessToken);
-        alert("Loged In");
         props.handleLogin();
       })
       .catch((error) => {

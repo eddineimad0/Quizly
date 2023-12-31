@@ -14,6 +14,7 @@ import { ACCESS_TOKEN } from "./constants";
 import LoadingIndicator from "./components/common/LoadingIndicator";
 import NotFound from "./components/common/NotFound";
 import Profile from "./components/profile/profile";
+import QuizList from "./components/quiz/QuizList";
 
 function App() {
   const navigate = useNavigate();
@@ -35,6 +36,8 @@ function App() {
         setIsLoading(false);
       })
       .catch((_) => {
+        // setCurrentUser(testUser);
+        // setIsAuthenticated(true);
         setIsLoading(false);
       });
   };
@@ -77,7 +80,16 @@ function App() {
       <Content className="app-content">
         <div className="container">
           <Routes>
-            <Route path="/" element={<HeroPage />} />
+            <Route
+              path="/"
+              element={
+                isAuthenticated ? (
+                  <QuizList username={undefined} listType={undefined} />
+                ) : (
+                  <HeroPage />
+                )
+              }
+            />
             <Route path="/sign-up" element={<SignUp />} />
             <Route
               path="/log-in"
@@ -106,8 +118,8 @@ function App() {
                 )
               }
             />
+            {/* Catch all routes */}
             <Route path="/*" element={<NotFound />} />
-            <Route path="/quiz/create" element={<NewQuiz />} />
           </Routes>
         </div>
       </Content>

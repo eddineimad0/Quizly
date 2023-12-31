@@ -40,6 +40,7 @@ export default function NewQuiz() {
     event.preventDefault();
 
     const quizData: Quiz = {
+      title: quizTitle,
       questions: quizQuestions.map((value: FormQuestion) => {
         return {
           text: value.text,
@@ -59,10 +60,12 @@ export default function NewQuiz() {
     };
 
     createQuiz(quizData)
-      .then(() => {
+      .then((response) => {
+        console.log(response.status);
         navigate("/");
       })
       .catch((error: any) => {
+        console.log(error);
         if (error.status === 401) {
           // TODO: handleLogout.
           navigate("/login");
@@ -249,6 +252,10 @@ export default function NewQuiz() {
   };
 
   const isFormInvalid = () => {
+    if (titleValidation.validateStatus !== "success") {
+      return true;
+    }
+
     if (quizDuration.days === 0 && quizDuration.hours === 0) {
       return true;
     }
@@ -268,6 +275,31 @@ export default function NewQuiz() {
     });
     return flag;
   };
+
+  const validateTitle = (quizTitle: string): FieldValidation => {
+    if (quizTitle.length === 0) {
+      return {
+        validateStatus: "error",
+        errorMsg: "Please enter the Quiz title!",
+      };
+    } else if (quizTitle.length > QUIZ_QUESTION_MAX_LENGTH) {
+      return {
+        validateStatus: "error",
+        errorMsg: `Title is too long (Maximum ${QUIZ_QUESTION_MAX_LENGTH} characters allowed)`,
+      };
+    } else {
+      return {
+        validateStatus: "success",
+        errorMsg: null,
+      };
+    }
+  };
+
+  const [quizTitle, setQuizTitle] = useState("");
+  const [titleValidation, setTitleValidation] = useState<FieldValidation>({
+    errorMsg: null,
+    validateStatus: "validating",
+  });
 
   const [quizQuestions, setQuizQuestions] = useState<FormQuestion[]>([
     {
@@ -308,6 +340,21 @@ export default function NewQuiz() {
       <h1 className="page-title">Create Quiz</h1>
       <div className="new-quiz-content">
         <Form onSubmitCapture={handleSubmit} className="create-quiz-form">
+          <FormItem
+            validateStatus={titleValidation.validateStatus}
+            help={titleValidation.errorMsg}
+            className="quiz-form-row"
+          >
+            <Input
+              placeholder={"Title"}
+              size="large"
+              value={quizTitle}
+              onChange={(event) => {
+                setQuizTitle(event.target.value);
+                setTitleValidation(validateTitle(quizTitle));
+              }}
+            />
+          </FormItem>
           {quizQuestions.map((value: FormQuestion, index: number) => {
             return (
               <QuestionFormElement
@@ -413,7 +460,7 @@ const QuestionFormElement = (props: QuestionFormElementProps) => {
   props.question.choices.forEach(
     (choice: FormQuestionChoice, index: number) => {
       choiceViews.push(
-        <PollChoice
+        <QuizChoice
           key={index}
           choice={choice}
           questionNumber={props.questionNumber}
@@ -430,6 +477,7 @@ const QuestionFormElement = (props: QuestionFormElementProps) => {
   );
   return (
     <div>
+      <h3>{`Question ${props.questionNumber + 1}:`}</h3>
       <FormItem
         validateStatus={props.question.validation.validateStatus}
         help={props.question.validation.errorMsg}
@@ -470,7 +518,7 @@ const QuestionFormElement = (props: QuestionFormElementProps) => {
   );
 };
 
-interface PollChoiceProps {
+interface QuizChoiceProps {
   choice: FormQuestionChoice;
   choiceNumber: number;
   questionNumber: number;
@@ -487,12 +535,12 @@ interface PollChoiceProps {
     choiceNumber: number
   ) => void;
 }
-function PollChoice(props: PollChoiceProps) {
+function QuizChoice(props: QuizChoiceProps) {
   return (
     <FormItem
       validateStatus={props.choice.validation.validateStatus}
       help={props.choice.validation.errorMsg}
-      className="poll-form-row"
+      className="quiz-form-row"
     >
       <Input
         placeholder={"Choice " + (props.choiceNumber + 1)}

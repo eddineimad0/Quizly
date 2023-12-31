@@ -17,7 +17,6 @@ public class UserController {
 
     @GetMapping("/me")
     public ResponseEntity<Optional<UserDetailsDto>>userProfile(@RequestHeader(name = SecurityConstants.AUTHORIZED_USER_HEADER) String username){
-        System.out.println("Requested profile="+username);
         var user = userService.findByUsername(username.toLowerCase());
         return user.map(
                         u->ResponseEntity.ok(Optional.of(UserDetailsDto.builder()

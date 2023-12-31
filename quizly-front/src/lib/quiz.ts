@@ -14,7 +14,18 @@ type QuizDuration = {
 };
 
 type Quiz = {
+  title: string;
   questions: Question[];
   length: number;
   duration: QuizDuration;
+};
+
+type Answer = {
+  questionId: number;
+  choiceId: number;
+};
+
+type QuizAnswers = {
+  quizID: number;
+  answers: Answer[];
 };

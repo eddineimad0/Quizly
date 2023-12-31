@@ -17,7 +17,6 @@ const request = (options: RequestOptions): Promise<any> => {
     method: options.method,
     body: options.body,
   };
-  console.log(url, cfg);
 
   return fetch(url, cfg).then((response) =>
     response.json().then((json) => {
@@ -81,7 +80,7 @@ export function getUserProfile(username: string): Promise<UserProfile> {
   });
 }
 
-export function getAllPolls(page: number, size: number) {
+export function getAllQuizs(page: number, size: number) {
   page = page || 0;
   size = size || QUIZ_LIST_SIZE;
 
@@ -97,7 +96,7 @@ export function getAllPolls(page: number, size: number) {
 
 export function createQuiz(quizData: Quiz): Promise<Response> {
   return request({
-    url: API_BASE_URL + "/quizes",
+    url: API_BASE_URL + "/quizs/create",
     method: "POST",
     body: JSON.stringify(quizData),
   });
@@ -111,11 +110,11 @@ export function createQuiz(quizData: Quiz): Promise<Response> {
 //   });
 // }
 
-export function getUserCreatedPolls(
+export function getUserCreatedQuizs(
   username: string,
   page: number,
   size: number
-) {
+): Promise<QuizListResponse> {
   page = page || 0;
   size = size || QUIZ_LIST_SIZE;
 
@@ -132,11 +131,11 @@ export function getUserCreatedPolls(
   });
 }
 
-export function getUserVotedPolls(
+export function getUserTakenQuizs(
   username: string,
   page: number,
   size: number
-) {
+): Promise<QuizListResponse> {
   page = page || 0;
   size = size || QUIZ_LIST_SIZE;
 

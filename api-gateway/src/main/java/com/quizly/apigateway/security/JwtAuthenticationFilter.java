@@ -30,7 +30,6 @@ public class JwtAuthenticationFilter implements GatewayFilter {
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         var req = exchange.getRequest();
-        System.out.println("[LOG]AuthFilter:URI="+req.getURI());
         if(routerValidator.isSecured.test(req)){
             if(isAuthMissing(req)){
                 // Authorization header not found continue along the responsibility chain.
